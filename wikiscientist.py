@@ -2,7 +2,6 @@
 
 import re
 import subprocess
-import wikipedia
 import random
 import numpy as np
 from PIL import Image
