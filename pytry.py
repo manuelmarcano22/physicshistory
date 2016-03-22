@@ -19,7 +19,7 @@ dataj = dataj.json()
 urlimage=dataj.get('thumbnail').get('source')
 responseimage = requests.get(urlimage)
 img = Image.open(BytesIO(responseimage.content))
-#img.show()
+img.show()
 
 #Extract
 extract = re.sub('\d', '--' , dataj.get('extract'))
