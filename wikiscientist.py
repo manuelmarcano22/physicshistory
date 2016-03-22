@@ -7,9 +7,9 @@ import random
 import numpy as np
 startnames=[]
 score=0.
-names=[ [line.split(sep='—')[0], re.findall('\d+', line)  ] for line in  open(r'listaplain.txt')]
+names=[ [line.split(sep='—')[0], re.findall('\d+', line)  ] for line in  open(r'listaplain.txt') if re.search('\d',line)]
 
-numberoftries=3
+numberoftries=5
 maxfame=100
 num=random.randint(0,maxfame)
 
