@@ -9,22 +9,34 @@ from PIL import Image
 import requests
 from io import BytesIO
 
-
 startnames=[]
 score=0.
 
 names= [ [re.findall('(?<=href=").*(?=tit)' , str(line))  , re.findall('(?<=—).*(?=<)', str(line))] for line in  open(r'listamedia.html') if ( re.search('(?<=href=").*(?=tit)' , str(line))    and re.search('\d',str(line))) ]
 names2=[ [ re.sub(' ','', re.sub('"','',i[0][0].split(sep='/')[2])) ,re.findall('\d+',i[1][0])   ] for i in names ]
 
-
-
-
 numberoftries=5
-maxfame=100
+
+limitedy = False
+centuary=len(names2)
+
+years = input('Define the years separated by space or write all.  \n')
+
+year1=years.split(sep=' ')[0]
+if year1.isdigit():
+    limitedy = True
+    year2 = years.split(sep=' ')[1]
+    cent=[i[1][0]   for i in names2]
+    cent= np.array(cent, dtype=int)
+    centmask = np.where(np.logical_and(cent > int(year1), cent <  int(year2)))
+
 
 cont=True
 while cont:
-    num=random.randint(0,maxfame)
+    if limitedy == False:
+        num=random.randint(0,centuary)
+    else:
+        num=np.random.choice(centmask[0])
     # Get url from rest API
     url="https://en.wikipedia.org/api/rest_v1/page/summary/"+str(names2[num][0])  
     dataj = requests.get(url)
@@ -33,7 +45,10 @@ while cont:
     tit = dataj.get('title')
     startnames.append([tit,names2[num][1][0] ])
     for i in range(1,numberoftries):
-        num=random.randint(0,maxfame)
+        if limitedy == False:
+            num=random.randint(0,centuary)
+        else:
+            num=np.random.choice(centmask[0])
         # Get url from rest API
         url="https://en.wikipedia.org/api/rest_v1/page/summary/"+str(names2[num][0])  
         dataj = requests.get(url)
@@ -46,16 +61,17 @@ while cont:
         print('Was '+str(startnames[i][0])+" born before, after or the same year as "+str(startnames[i-1][0])+'?')
         conti=False
         while conti==False:
-            inputkey = input('Press h for a hint, a for after, b for before and s for same year:\n')
-            if str(inputkey) == 'h':
-                # Image 
-                urlimage=dataj.get('thumbnail').get('source')
-                responseimage = requests.get(urlimage)
-                img = Image.open(BytesIO(responseimage.content))
-                img.show()
+            inputkey = input('Press h for a hint, hi for an image,  a for after, b for before and s for same year:\n')
+            if str(inputkey).startswith('h'):
                 #Extract
                 extract = re.sub('\d', '--' , dataj.get('extract'))
                 print(extract)
+                if len(str(inputkey)) >= 2:
+                    # Image 
+                    urlimage=dataj.get('thumbnail').get('source')
+                    responseimage = requests.get(urlimage)
+                    img = Image.open(BytesIO(responseimage.content))
+                    img.show()
             elif str(inputkey) == 'b':
                 conti=True
                 if np.sign(agedif) == -1:

@@ -26,3 +26,6 @@ extract = re.sub('\d', '--' , dataj.get('extract'))
 
 #Title
 tit = dataj.get('title')
+
+#Get views
+
