@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import re
+import subprocess
 import wikipedia
 import random
 import numpy as np
@@ -27,7 +28,10 @@ while cont:
         while conti==False:
             inputkey = input('Press h for a hint, a for after, b for before and s for same year:\n')
             if str(inputkey) == 'h':
+                #cmdh='sed -n '+str(num)+"p listavistas.txt | awk '{ print $1 }'"
+                #page = subprocess.check_output(cmdh,shell=True).decode("utf-8")
                 hint=wikipedia.summary(str(startnames[i][0])+'Physics', sentences=1)
+                #hint=wikipedia.summary(page.split(sep='\n')[0], sentences=1, auto_suggest=False)
                 print(re.sub('\d', '---', hint))
             elif str(inputkey) == 'b':
                 conti=True
