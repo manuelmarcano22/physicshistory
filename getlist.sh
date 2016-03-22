@@ -16,3 +16,11 @@ do
     echo $i $MAXVAL >> listavistas.txt
     echo aaa
 done
+
+#TO do do it with 
+curl -X GET --header 'Accept: application/json' 'https://en.wikipedia.org/api/rest_v1/page/summary/Benjamin_Lee_(physicist)'
+
+#This gives you the extact and also title
+
+
+
